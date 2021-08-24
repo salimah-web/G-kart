@@ -1,1 +1,1 @@
-web: gunicorn SWO.wsgi
+web: gunicorn SWO.wsgi --log-file -
