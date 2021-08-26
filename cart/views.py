@@ -93,11 +93,13 @@ def remove_cart(request,product_id, cart_item_id):
         pass
     return redirect('cart')
 def cart(request, total=0, quantity=0, cart_items=None):
-    cart=Cart.objects.get(cart_id=_cart_id(request))
-    cart_items=Cart_item.objects.filter(cart=cart, is_active=True)
+    
     try:
+        tax=0
+        grand_total=0
+        cart=Cart.objects.get(cart_id=_cart_id(request))
+        cart_items=Cart_item.objects.filter(cart=cart, is_active=True)
         for cart_item in cart_items:
-
             total+=cart_item.product.price*cart_item.quantity
             quantity+=cart_item.quantity
         tax=2*total/100
