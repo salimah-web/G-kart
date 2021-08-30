@@ -92,8 +92,7 @@ def remove_cart(request,product_id, cart_item_id):
     except:
         pass
     return redirect('cart')
-def cart(request, total=0, quantity=0, cart_items=None):
-    
+def cart(request, total=0, quantity=0, cart_items=None):  
     try:
         tax=0
         grand_total=0
