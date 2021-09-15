@@ -5,14 +5,16 @@ from .models import Account
 from django.contrib import messages,auth
 from django.contrib.auth.decorators import login_required
 # Create your views here.
-
+from urllib.parse import ParseResult, urlparse
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_decode,urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
-
+from cart.models import Cart,Cart_item
+from cart.views import _cart_id
+import requests
 def register(request):
     if request.POST:
         form=RegistrationForm(request.POST)
@@ -54,8 +56,56 @@ def sign_in(request):
         password=request.POST['password']
         user = auth.authenticate(email=email,password=password)
         if user is not None:
+            try:
+                cart=Cart.objects.get(cart_id=_cart_id(request))
+                cart_item_exist=Cart_item.objects.filter( cart=cart).exists()
+                if cart_item_exist:
+                    cart_item=Cart_item.objects.filter(cart=cart)
+                    pro_var=[]
+                    for item in cart_item:
+                       var=item.variation.all()
+                       pro_var.append(list(var))
+
+                    cart_items=Cart_item.objects.filter(user=user)
+                    exs_var=[]
+                    item_id=[]
+                    for cart_item in cart_items:
+                        var=cart_item.variation.all()
+                        id=cart_item.id
+                        exs_var.append(list(var))
+                        item_id.append(id)
+                               
+                    for pr in pro_var:
+                        if pr in exs_var:
+                            index=exs_var.index(pr)
+                            id=item_id[index]
+                            item=Cart_item.objects.get(id=id)
+                            item.quantity+=1
+                            item.user=user
+                            item.save()
+                        else:
+                            item.user=user
+                            print(item.user)
+                            item.save()
+                            print(item.user)
+            except:    
+                pass
             auth.login(request, user)
-            return redirect('dashboard')
+            url8=request.META.get("HTTP_REFERER")
+            url=request.path
+            print(url)
+            try:
+                q=urlparse(url)
+                query=requests.utils.urlparse(url8).query
+                print(query)
+                print(q.path)
+                param=dict(x.split("=") for x in query.split('&'))
+                print(param)
+                if "next" in param:
+                    nextpage=param["next"]
+                    return redirect (nextpage)
+            except:
+                return redirect('dashboard')               
         else:
             messages.error(request, 'Invalid credentials')
             return redirect("signin")
@@ -64,7 +114,7 @@ def sign_in(request):
 def logout(request):
     auth.logout(request)
     messages.success(request, "You have logged out succesfully")
-    return redirect('signin')
+    return redirect("signin")
 
 def activate_email(request,uidb64,token):
     try:
