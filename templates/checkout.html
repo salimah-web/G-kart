@@ -1,21 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}
-
 {% load static %}
-
-
 
 <section class="section-content padding-y bg">
 <div class="container">
-
-<!-- ============================ COMPONENT 1 ================================= -->
 
 <div class="row">
 	<aside class="col-lg-6">
 <div class="card">
     <div class="card-body">
         <h4 class="card-title mb-4">Billing Address</h4>
-        <form action"" method="POST">
+        <form 
+       method ='POST' action="{% url 'place_order' %}" >
         {% csrf_token %}
             <div class="form-row">
                 <div class="col form-group">
@@ -35,7 +31,7 @@
                 </div>
                  <div class="col form-group">
                     <label for="">Phone Number</label>
-                    <input type="text" name="phone_number" class="form-control">
+                    <input type="text" name="phone" class="form-control">
                 </div> 
                 
             </div>
@@ -119,9 +115,10 @@
 </table>
 			
 
-            <button type="submit" class="btn btn-primary btn-block">Place Order</button>
-			<a href="{% url 'store' %}" name="submit" class="btn btn-light btn-block">Continue Shopping</a>
+            <button type="submit" name="submit" class="btn btn-primary btn-block">Place Order</button>
+			
             </form>
+            <a href="{% url 'store' %}" name="submit" class="btn btn-light btn-block">Continue Shopping</a>
 		</div> <!-- card-body.// -->
 		</div> <!-- card.// -->
 
