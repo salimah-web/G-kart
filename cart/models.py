@@ -11,7 +11,6 @@ class Cart(models.Model):
     def __str__(self):
         return self.cart_id
 
-
 class Cart_item(models.Model):
     user=models.ForeignKey(Account, on_delete=models.CASCADE, null=True)
     product=models.ForeignKey(Product, on_delete=models.CASCADE)

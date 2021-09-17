@@ -92,13 +92,8 @@ def sign_in(request):
                 pass
             auth.login(request, user)
             url8=request.META.get("HTTP_REFERER")
-            url=request.path
-            print(url)
             try:
-                q=urlparse(url)
                 query=requests.utils.urlparse(url8).query
-                print(query)
-                print(q.path)
                 param=dict(x.split("=") for x in query.split('&'))
                 print(param)
                 if "next" in param:
