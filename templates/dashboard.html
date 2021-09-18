@@ -22,20 +22,33 @@
 		<a class="btn btn-light btn-block" href="{% url 'logout' %}"> <i class="fa fa-power-off"></i> <span class="text">Log out</span> </a> 
 		<!--   SIDEBAR .//END   -->
 	</aside>
+	
+			<secton  class='text-center'>
+			<div class="container">
+				{% if not orders %}
+				<h3 class='text-center'>You have made no orders</h3>
+				<div class='text-center'>
+					<a href="{% url 'store' %}" class="btn btn-primary">Continue shopping</a>
+				</div>
+				</div>
+			</section>		
+			
+					{% else %}
 	<main class="col-md-9">
+		{% for order in orders %}
 		<article class="card">
 		<header class="card-header">
-			<strong class="d-inline-block mr-3">Order ID: 6123456789</strong>
-			<span>Order Date: 16 December 2018</span>
+			<strong class="d-inline-block mr-3">Order ID: {{order.order_number}}</strong>
+			<span>Order Date: {{order.created_at}}</span>
 		</header>
 		<div class="card-body">
 			<div class="row"> 
 				<div class="col-md-8">
 					<h6 class="text-muted">Delivery to</h6>
-					<p>Michael Jackson <br>  
-					Phone +1234567890 Email: myname@pixsellz.com <br>
-			    	Location: Home number, Building name, Street 123,  Tashkent, UZB <br> 
-			    	P.O. Box: 100123
+					<p>{{order.full_name}} <br>  
+					Phone {{order.phone}} Email: {{order.email}} <br>
+			    	Location: {{order.address}} <br> 
+
 			 		</p>
 				</div>
 				<div class="col-md-4">
@@ -44,56 +57,46 @@
 						<i class="fab fa-lg fa-cc-visa"></i>
 					    Visa  **** 4216  
 					</span>
-					<p>Subtotal: $356 <br>
-					 Shipping fee:  $56 <br> 
-					 <span class="b">Total:  $456 </span>
+					
+					 <span class="b">Amount paid:  ${{total}} </span>
 					</p>
 				</div>
 			</div> <!-- row.// -->
 		</div> <!-- card-body .// -->
 		<div class="table-responsive">
 		<table class="table table-hover">
+		<tr><td width="65"></td>
+			<td>Product</td>
+			<td>Quantity</td>
+			<td>Sub total</td>
+			<td width="250"> <a href="#" class="btn btn-outline-primary">Track order</a> <a href="{% url 'cart' %}" class="btn btn-light"> Details </a> </td
+			</tr>
+			{% for cart_item in cart_items %}
 			<tr>
+			
 				<td width="65">
-					<img src="../images/items/1.jpg" class="img-xs border">
+					<img src="{{cart_item.product.images.url}}" class="img-xs border">
 				</td>
 				<td> 
-					<p class="title mb-0">Product name goes here </p>
-					<var class="price text-muted">USD 145</var>
+					<p class="title mb-0">{{cart_item.product.product_name}} </p>
+					<var class="price text-muted">${{cart_item.product.price}} each</var>
 				</td>
-				<td> Seller <br> Nike clothing </td>
-				<td width="250"> <a href="#" class="btn btn-outline-primary">Track order</a> <a href="#" class="btn btn-light"> Details </a> </td>
+
+				<td>   {{cart_item.quantity}} </td>
+				<td>  {{cart_item.sub_total}} </td>
+				
+			
 			</tr>
-			<tr>
-				<td>
-					<img src="../images/items/2.jpg" class="img-xs border">
-				</td>
-				<td> 
-					<p class="title mb-0">Another name goes here </p>
-					<var class="price text-muted">USD 15</var>
-				</td>
-				<td> Seller <br> ABC shop </td>
-				<td> <a href="#" class="btn btn-outline-primary">Track order</a> <a href="#" class="btn btn-light"> Details </a> </td>
-			</tr>
-			<tr>
-				<td>
-					<img src="../images/items/3.jpg" class="img-xs border">
-				</td>
-				<td> 
-					<p class="title mb-0">The name of the product  goes here </p>
-					<var class="price text-muted">USD 145</var>
-				</td>
-				<td> Seller <br> Wallmart </td>
-				<td> <a href="#" class="btn btn-outline-primary">Track order</a> <a href="#" class="btn btn-light"> Details </a> </td>
-			</tr>
+			{% endfor %}
 		</table>
 		</div> <!-- table-responsive .end// -->
-		</article> <!-- order-group.// --> 
+		</article> 
+		{% endfor %}<!-- order-group.// --> 
 	</main>
 </div> <!-- row.// -->
 </div>
 
-
+{% endif %}
 </section>
 <!-- ========================= SECTION CONTENT END// ========================= -->
 

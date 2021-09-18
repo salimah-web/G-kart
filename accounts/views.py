@@ -15,6 +15,9 @@ from django.core.mail import EmailMessage
 from cart.models import Cart,Cart_item
 from cart.views import _cart_id
 import requests
+
+from order.models import Order
+from cart.models import Cart_item
 def register(request):
     if request.POST:
         form=RegistrationForm(request.POST)
@@ -128,7 +131,30 @@ def activate_email(request,uidb64,token):
 
 @login_required(login_url="signin")
 def dashboard(request):
-    return render(request,'dashboard.html')    
+    user=request.user
+    orders=Order.objects.filter(user=user)
+    cart_items=Cart_item.objects.filter(user=user)
+    cart_count=cart_items.count()
+    if cart_count<=0:
+        return redirect("store")
+    grand_total=0
+    tax=0
+    total=0
+    for cart_item in cart_items:
+        tot=(cart_item.product.price*cart_item.quantity)
+        total+=tot
+        #quantity +=cart_item.quantity
+
+    tax=(2*total)/100
+    grand_total=total+tax
+    context={
+        'orders':orders,
+        'cart_items':cart_items,
+        'total':total
+
+    }
+
+    return render(request,'dashboard.html', context)    
 
 def forgot_password(request):
     if request.POST:
