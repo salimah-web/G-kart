@@ -11,9 +11,10 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+from typing import cast
 
 from django.core.mail.message import EmailMessage
-
+from decouple import config
 import environ
 
 env = environ.Env()
@@ -29,10 +30,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-hticlpv#n4zogg5m2g@177740xoknhj+_=b=z(^i6en5gba60e'
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = ['gk-ecommerce.herokuapp.com','127.0.0.1']
 
@@ -51,7 +52,8 @@ INSTALLED_APPS = [
     'accounts',
     'store',
     'cart',
-    "order"
+    "order",
+    'admin_honeypot',
 ]
 
 MIDDLEWARE = [
@@ -64,10 +66,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_session_timeout.middleware.SessionTimeoutMiddleware',
 ]
 
 ROOT_URLCONF = 'SWO.urls'
-
+SESSION_EXPIRE_SECONDS = 3600
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
+SESSION_TIMEOUT_REDIRECT = 'signin'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

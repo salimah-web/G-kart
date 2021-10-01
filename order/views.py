@@ -143,7 +143,7 @@ def order_complete(request):
 
     try:
         order=Order.objects.get(order_number=order_number)
-        ordered_products=OrderProduct.objects.filter(order_id=order.id)
+        ordered_products=OrderProduct.objects.filter(order__id=order.id)
         
         subtotal=0
         for i in ordered_products:
