@@ -35,7 +35,7 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = ['gk-ecommerce.herokuapp.com','127.0.0.1']
+ALLOWED_HOSTS = ['gk-ecommerce.herokuapp.com','127.0.0.1','g-kart.eba-ju2yvqpa.us-west-2.elasticbeanstalk.com']
 
 
 # Application definition
