@@ -16,9 +16,15 @@
 			
 		</header>
 		<div class="card-body">
+        {% if userprofile.profile_pics %}
         <div class="text-right">
             <img src="{{userprofile.profile_pics.url}}" alt="Profile pics" width="100" style="border-radius:50px;" >
         </div>
+        {% else %}
+        <div class="text-right">
+            <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Profile pics" width="100" style="border-radius:50px;" >
+        </div>
+        {% endif %}
 			<div class="row"> 
 		
 		<div class="col-md-12">

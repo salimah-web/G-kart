@@ -1,5 +1,6 @@
 from decimal import Context
 from django import contrib
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404, redirect, render
 from .forms import RegistrationForm, UserForm, UserProfileForm
 from .models import Account, UserProfile
@@ -32,6 +33,8 @@ def register(request):
             user= Account.objects.create_user(first_name=first_name,last_name=last_name,email=email,password=password,username=username)
             user.phone_number=phone_number
             user.save()
+
+            UserProfile.objects.create(user=user)
 
             current_site=get_current_site(request)
             mail_subject="Please activate your mail"
@@ -135,7 +138,11 @@ def dashboard(request):
     user=request.user
     orders=Order.objects.order_by('-created_at').filter(user_id=user.id, is_ordered=True)  
     orders_count=orders.count()
-    userprofile=UserProfile.objects.get(user_id=user.id)
+    try:
+        userprofile=UserProfile.objects.get(user_id=user.id)
+       
+    except ObjectDoesNotExist:
+        userprofile=None
     context={
         'orders_count':orders_count,
         'userprofile':userprofile
@@ -211,7 +218,7 @@ def reset_password(request):
     else:        
         return render(request, 'set_password.html')
 @login_required(login_url="signin")
-def EditProfile(request):
+def EditProfile(request):  
     userprofile=get_object_or_404(UserProfile, user=request.user)
     if request.method == "POST":
         user_form=UserForm(request.POST, instance=request.user)

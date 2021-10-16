@@ -29,6 +29,7 @@
 				</div>
 			</div>
 		</div>
+		{% if userprofile.profile_pics %}
 		<div class="col-md-6">
 			<div class="card" style="text-align:center;">
 				<div class="card-body">
@@ -39,7 +40,19 @@
 				</div>
 			</div>
 		</div>	
-				
+
+		{% else %}
+		<div class="col-md-6">
+			<div class="card" style="text-align:center;">
+				<div class="card-body">
+				<img src="https://www.w3schools.com/howto/img_avatar.png" alt="User Profile Picture" width="50" height="50" style="border-radius:50%;">
+					<p class="mb-0">{{user.email}}</h5>
+					<h4>{{user.phone_number}}</h4>
+					
+				</div>
+			</div>
+		</div>	
+		{% endif %}
 			</div> <!-- row.// -->
 		</div>
 		</article> 
